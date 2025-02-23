@@ -107,10 +107,10 @@ After the script completes:
   - **Force a manual renew** (for testing):
     ```bash
     ~/.acme.sh/acme.sh --renew -d ns1.mydomain.com --force
-      ```
+    ```
    - If running as root:
     ```bash
-   /root/.acme.sh/acme.sh --renew -d ns1.mydomain.com --force
+      /root/.acme.sh/acme.sh --renew -d ns1.mydomain.com --force
     ```
 
 ## Troubleshooting
