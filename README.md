@@ -1,6 +1,6 @@
 # Pi-hole v6 SSL Automation Using acme.sh and Cloudflare DNS (Absolute Path Method)
 
-This repository automates obtaining and installing a Let’s Encrypt SSL certificate for [Pi-hole v6](https://pi-hole.net/) using [acme.sh](https://github.com/acmesh-official/acme.sh) and **Cloudflare DNS**. The script uses the **absolute path** to `acme.sh` rather than relying on shell aliases or profiles. This approach ensures reliable operation in both interactive and non-interactive environments, including Debian 12.
+This repository automates obtaining and installing a **Let’s Encrypt SSL certificate** for [Pi-hole v6](https://pi-hole.net/) using [acme.sh](https://github.com/acmesh-official/acme.sh) and **Cloudflare DNS**. The script uses the **absolute path** to `acme.sh` rather than relying on shell aliases or profiles. This approach ensures reliable operation in both interactive and non-interactive environments, including Debian 12.
 
 ## Table of Contents
 
