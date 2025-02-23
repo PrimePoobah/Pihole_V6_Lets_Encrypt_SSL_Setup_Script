@@ -110,7 +110,6 @@ After the script completes:
    ```
 
   - If running as root:
-
    ```bash
    /root/.acme.sh/acme.sh --renew -d ns1.mydomain.com --force
    ```
