@@ -86,6 +86,8 @@ The script will:
   - Install the certificate into Pi-hole
   - Restart Pi-hole FTL
 
+---
+
 ## Verification
 After the script completes:
 
@@ -101,6 +103,8 @@ After the script completes:
   sudo openssl x509 -in /etc/pihole/tls.pem -text -noout
    ```
 
+---
+
 ## Renewal
 `acme.sh` will set up a daily cron job to **automatically renew** certificates before they expire.
 
@@ -112,6 +116,8 @@ After the script completes:
       ```bash
       /root/.acme.sh/acme.sh --renew -d ns1.mydomain.com --force
       ```
+
+---
 
 ## Troubleshooting
    - `acme.sh: command not found`
@@ -126,6 +132,8 @@ After the script completes:
 pihole-FTL --show
 ```
 The `webserver.domain` should show your custom domain (e.g., `ns1.mydomain.com`).
+
+---
 
 ## License
 This project is licensed under the MIT License. Please review the license file for more details.
