@@ -63,14 +63,17 @@ The script:
    ```bash
    git clone https://github.com/PrimePoobah/Pihole_V6_Lets_Encrypt_SSL_Setup_Script.git
    cd Pihole_V6_Lets_Encrypt_SSL_Setup_Script
-
+   ```
+   
 2. **Make the script executable:**
   ```bash
   chmod +x pihole-ssl-setup.sh
+   ```
 
 3. **Run the script** (as root or a user with sudo privileges):
   ```bash
   sudo ./pihole-ssl-setup.sh
+   ```
 
 4. **Follow the prompts:**
   - **Domain**: e.g. `ns1.mydomain.com`
@@ -89,39 +92,43 @@ After the script completes:
 1. **Access Pi-hole**: Open a browser and go to:
   ```bash
   https://ns1.mydomain.com/admin
+   ```
 
 2. **Check Certificate**:
   - Your browser should show a valid certificate issued by Let’s Encrypt (or whichever CA you specified).
   - You can also verify via command line:
   ```bash
   sudo openssl x509 -in /etc/pihole/tls.pem -text -noout
+   ```
 
-##Renewal
+## Renewal
 `acme.sh` will set up a daily cron job to **automatically renew** certificates before they expire.
 
   - **Force a manual renew** (for testing):
     ```bash
     ~/.acme.sh/acme.sh --renew -d ns1.mydomain.com --force
-If running as root:
-bash
-Copy
-Edit
-/root/.acme.sh/acme.sh --renew -d ns1.mydomain.com --force
-Troubleshooting
-acme.sh: command not found
-If you see this error, verify that you are:
-Using this script (it calls acme.sh via the absolute path).
-Running as Bash (not sh or dash).
-DNS Validation Failures
-Ensure your domain’s DNS is managed by the Cloudflare account corresponding to the Cloudflare token.
-Certificate Domain Mismatch
-Make sure the Pi-hole domain set by the script matches the domain in your certificate. You can check with:
-bash
-Copy
-Edit
+   ```
+
+      - If running as root:
+   ```bash
+   /root/.acme.sh/acme.sh --renew -d ns1.mydomain.com --force
+   ```
+
+## Troubleshooting
+   - `acme.sh: command not found`
+   If you see this error, verify that you are:
+   1. Using **this script** (it calls `acme.sh` via the absolute path).
+   2. Running as **Bash** (not `sh` or `dash`).
+   - **DNS Validation Failures**
+   Ensure your domain’s DNS is managed by the Cloudflare account corresponding to the Cloudflare token.
+   - **Certificate Domain Mismatch**
+   Make sure the **Pi-hole domain** set by the script matches the domain in your certificate. You can check with:
+ ```bash
 pihole-FTL --show
-The webserver.domain should show your custom domain (e.g., ns1.mydomain.com).
-License
+```
+The `webserver.domain` should show your custom domain (e.g., `ns1.mydomain.com`).
+
+## License
 This project is licensed under the MIT License. Please review the license file for more details.
 
 Thank you for using this script to secure your Pi-hole v6 installation. If you find it helpful, consider contributing or submitting issues via GitHub.****
