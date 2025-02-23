@@ -108,11 +108,7 @@ After the script completes:
     ```bash
     ~/.acme.sh/acme.sh --renew -d ns1.mydomain.com --force
    ```
-
-  - If running as root:
-   ```bash
-   /root/.acme.sh/acme.sh --renew -d ns1.mydomain.com --force
-   ```
+   - If running as root:
 
 ## Troubleshooting
    - `acme.sh: command not found`
