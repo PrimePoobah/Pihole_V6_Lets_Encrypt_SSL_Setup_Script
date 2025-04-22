@@ -33,6 +33,7 @@ echo "4) AWS Route53"
 echo "5) DigitalOcean"
 echo "6) Linode"
 echo "7) Google Cloud DNS"
+echo "8) deSEC"
 read -p "Enter your choice (1-7): " DNS_PROVIDER
 
 # Set up DNS validation credentials based on provider
@@ -127,6 +128,14 @@ case "$DNS_PROVIDER" in
     export GCE_SERVICE_ACCOUNT_FILE="${GCP_KEY_FILE}"
     DNS_METHOD="dns_gcloud"
     ;;
+
+  8)
+    # deSEC
+    read -p "Enter your deSEC API token: " DESEC_API_TOKEN
+    
+    export DEDYN_TOKEN="${DESEC_API_TOKEN}"
+    DNS_METHOD="dns_desec"
+    ;;
     
   *)
     echo "Invalid DNS provider selected. Exiting."
@@ -157,12 +166,13 @@ echo "=== Checking acme.sh version ==="
 
 echo "=== Issuing certificate for '${DOMAIN}' ==="
 "${ACME_BIN}" --issue \
-  --${DNS_METHOD} \
+  --dns ${DNS_METHOD} \
   -d "${DOMAIN}" \
-  --server letsencrypt
+  --server letsencrypt \
+  --keylength ec-256
 
 # Certificate paths
-CERT_PATH="${ACME_HOME}/${DOMAIN}"
+CERT_PATH="${ACME_HOME}/${DOMAIN}_ecc"
 KEY_FILE="${CERT_PATH}/${DOMAIN}.key" 
 CERT_FILE="${CERT_PATH}/${DOMAIN}.cer"
 COMBINED_CERT="/tmp/tls.pem"
