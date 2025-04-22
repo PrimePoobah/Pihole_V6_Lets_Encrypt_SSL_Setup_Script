@@ -4,7 +4,7 @@ set -e
 # Display information about the script
 echo "=== Pi-hole HTTPS Setup Script ==="
 echo "This script sets up HTTPS for Pi-hole using acme.sh"
-echo "Supported DNS providers: Cloudflare, Namecheap, GoDaddy, AWS Route53, DigitalOcean, Linode, Google Cloud DNS"
+echo "Supported DNS providers: Cloudflare, Namecheap, GoDaddy, AWS Route53, DigitalOcean, Linode, Google Cloud DNS, deSEC"
 echo "Supports both bare metal and Docker installations"
 
 # Detect if running in a Docker environment
