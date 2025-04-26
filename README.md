@@ -53,4 +53,5 @@ Supports both **bare-metal** and **Docker** Pi-hole setups with auto-renewal, ha
    ./pihole-https-setup.sh
    ```
 
-- Follow the prompts: Enter your domain, email, select DNS provider, supply API keys securely.
+4. **Follow the prompts**
+   Enter your domain, email, select DNS provider, supply API keys securely.
