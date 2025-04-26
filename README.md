@@ -43,7 +43,7 @@ Supports both **bare-metal** and **Docker** Pi-hole setups with auto-renewal, ha
 2. **Download Script**
 
    ```bash
-   curl -O https://yourdomain.com/path/to/pihole-https-setup.sh
+   curl -O https://github.com/PrimePoobah/Pihole_V6_Lets_Encrypt_SSL_Setup_Script/blob/main/piholev6-ssl-setup.sh
    chmod +x pihole-https-setup.sh
 
    ```
