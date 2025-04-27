@@ -62,11 +62,11 @@ validate_email() {
 }
 
 validate_api_key() {
-  [[ "$1" =~ ^[A-Za-z0-9._-]+$ ]]
+  [[ "$1" =~ ^[A-Za-z0-9._\-+=\/~!*(),:%@&]+$ ]]
 }
 
 validate_aws_secret() {
-  [[ "$1" =~ ^[A-Za-z0-9/+=]+$ ]]
+  [[ "$1" =~ ^[A-Za-z0-9._\-+=\/~!*(),:%@&]+$ ]]
 }
 
 validate_docker_name() {
