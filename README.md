@@ -7,7 +7,6 @@
 [![acme.sh powered](https://img.shields.io/badge/acme.sh-powered-blue)](https://github.com/acmesh-official/acme.sh)
 [![HTTPS Enabled](https://img.shields.io/badge/HTTPS-Enabled-brightgreen)]()
 [![DNS Providers](https://img.shields.io/badge/DNS%20Providers-8-orange)]()
-[![Status](https://img.shields.io/badge/status-active-success.svg)]()
 [![Auto Renewal](https://img.shields.io/badge/Auto%20Renewal-Enabled-success)]()
 
 **Secure your Pi-hole admin interface with HTTPS/SSL using this automated setup script. Works with both traditional and Docker Pi-hole installations.**
