@@ -1,8 +1,14 @@
-# Pi-hole HTTPS Setup with IPv6 Support
+# Pi-hole V6 HTTPS Certificate Setup 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Docker Support](https://img.shields.io/badge/Docker-Support-blue)](https://www.docker.com/)
 [![Pi-hole Compatible](https://img.shields.io/badge/Pi--hole-Compatible-green)](https://pi-hole.net/)
+[![Let's Encrypt Compatible](https://img.shields.io/badge/Let%27s%20Encrypt-Compatible-brightgreen)](https://letsencrypt.org/)
+[![acme.sh powered](https://img.shields.io/badge/acme.sh-powered-blue)](https://github.com/acmesh-official/acme.sh)
+[![HTTPS Enabled](https://img.shields.io/badge/HTTPS-Enabled-brightgreen)]()
+[![DNS Providers](https://img.shields.io/badge/DNS%20Providers-8-orange)]()
+[![Status](https://img.shields.io/badge/status-active-success.svg)]()
+[![Auto Renewal](https://img.shields.io/badge/Auto%20Renewal-Enabled-success)]()
 
 **Secure your Pi-hole admin interface with HTTPS/SSL using this automated setup script. Works with both traditional and Docker Pi-hole installations.**
 
@@ -31,7 +37,6 @@ The script leverages [acme.sh](https://github.com/acmesh-official/acme.sh) for c
 ## ✨ Features
 
 - **Automated HTTPS Setup**: One-command solution to secure your Pi-hole admin interface
-- **IPv6 Compatible**: Works seamlessly with IPv6 deployments
 - **Multiple DNS Provider Support**: Works with 8 major DNS providers for validation
 - **Docker Support**: Detects and configures certificates for Docker Pi-hole installations
 - **Automatic Renewal**: Sets up scheduled certificate renewal via cron
@@ -65,7 +70,7 @@ The script supports DNS validation through the following providers:
 1. Download the script:
 
 ```bash
-curl -O https://raw.githubusercontent.com/PrimePoobah/piholev6-ssl-setup/main/piholev6-ssl-setup.sh
+curl -O https://raw.githubusercontent.com/yourusername/piholev6-ssl-setup/main/piholev6-ssl-setup.sh
 ```
 
 2. Make it executable:
