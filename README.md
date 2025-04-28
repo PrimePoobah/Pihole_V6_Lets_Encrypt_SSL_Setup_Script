@@ -66,7 +66,7 @@ Make sure you have **passwordless sudo** access.
 ### 2. Download the Script
 
 ```bash
-curl -O  https://raw.githubusercontent.com/PrimePoobah/Pihole_V6_Lets_Encrypt_SSL_Setup_Script/piholev6-ssl-setup.sh
+curl -O https://github.com/PrimePoobah/Pihole_V6_Lets_Encrypt_SSL_Setup_Script/blob/main/piholev6-ssl-setup.sh
 chmod +x piholev6-ssl-setup.sh
 ```
 
