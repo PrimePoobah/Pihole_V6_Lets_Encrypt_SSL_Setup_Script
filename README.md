@@ -1,14 +1,19 @@
-# Secure HTTPS Setup Script for Pi-hole using acme.sh (Docker and Bare-Metal Support)
+# Secure HTTPS Setup for Pi-hole using acme.sh (Docker + Bare-Metal)
 
+<<<<<<< HEAD
 Easily and securely configure **HTTPS/SSL certificates** for your **Pi-hole** instance using [acme.sh](https://github.com/acmesh-official/acme.sh) with DNS API validation.\
 This script is designed for **bare-metal** and **Docker-based** Pi-hole installations, fully hardened for production, and audit-ready.
+=======
+This script securely configures **HTTPS and SSL certificates** for your **Pi-hole** installation using the **acme.sh** ACME client and **DNS API validation**.  
+Supports both **bare-metal** and **Docker** Pi-hole setups with auto-renewal, hardened security, and major DNS providers.
+>>>>>>> parent of 6979e5d (Refactored for even more security and structure)
 
 ---
 
-## 🚀 Key Features
+## ✨ Key Features
 
-- Automatically issues **Let's Encrypt EC-256 certificates** (lightweight, secure).
-- Supports **DNS API validation** with:
+- Automates **Let's Encrypt EC-256 certificates** for Pi-hole.
+- **DNS API validation** for:
   - Cloudflare
   - Namecheap
   - GoDaddy
@@ -17,50 +22,43 @@ This script is designed for **bare-metal** and **Docker-based** Pi-hole installa
   - Linode
   - Google Cloud DNS
   - deSEC
-- Works for both **bare-metal** and **Dockerized** Pi-hole deployments.
-- Detects Pi-hole environment **automatically** (Docker or Bare-Metal).
-- Fully **automated HTTPS installation** and **Pi-hole FTL service reload**.
-- **Auto-renewal hooks** configured through acme.sh.
-- Full **secure logging** to `~/pihole-https-setup.log`.
-- **Secure temp file handling** and automatic cleanup even on script failure.
-- Hardened against:
-  - Command injection
-  - Secret leakage
-  - Race conditions
-  - Permission misconfigurations
+- Works with **Docker-based** and **bare-metal** Pi-hole servers.
+- **Automatic HTTPS installation** and **FTL service reload**.
+- **Auto-renewal** configured with acme.sh hooks.
 
 ---
 
-## 🔒 Security Highlights
+## 🔒 Advanced Security Hardening
 
-This script implements advanced security best practices:
-
-- **Secrets never exported globally**: Credentials are scoped to temporary subshells.
-- **No hardcoded paths**: All system paths and file locations are variables.
-- **Trap cleanup**: Temporary files are securely deleted on exit or interruption.
-- **Secure temp directories**: Created with `mktemp -d` and `chmod 700`.
-- **Strict input validation**: Domains, emails, Docker container names, and API tokens validated safely.
-- **Injection prevention**: All user inputs are safely sanitized.
-- **AWS credentials**: Permissions validated dynamically and corrected if needed.
-- **Centralized logging**: Logs actions (not secrets) into a secured `pihole-https-setup.log` file.
+- ✅ API keys handled in **secure subshells** (never globally exported).
+- ✅ **Input validation**: domains, emails, Docker names, API secrets.
+- ✅ **Public IP fallback** using multiple providers with strict IPv4 validation.
+- ✅ **Secure temporary file handling** (`$HOME/.acme.sh/tmp/` with strict permissions).
+- ✅ **GCP JSON key validation** (format and required fields).
+- ✅ **AWS credentials file validation** (permissions + required keys).
+- ✅ **Passwordless sudo check** before running privileged commands.
 
 ---
 
 ## 📖 How to Use
 
-### 1. Prerequisites
+1. **Install Dependencies**  
+   Ensure you have `sudo`, `curl`, `jq`, and (optionally) `docker` installed.
 
-Install required tools:
+2. **Download Script**
 
-```bash
-sudo apt update
-sudo apt install -y curl jq sudo docker.io
-```
+   ```bash
+   curl -O https://yourdomain.com/path/to/pihole-https-setup.sh
+   chmod +x pihole-https-setup.sh
 
-(_Docker only if you are running Pi-hole in a container._)
+   ```
 
-Make sure you have **passwordless sudo** access.
+3. **Run the Script**
+   ```bash
+   ./pihole-https-setup.sh
+   ```
 
+<<<<<<< HEAD
 ---
 
 ### 2. Download the Script
@@ -155,3 +153,6 @@ This script is distributed under the [MIT License](LICENSE).
 
 **Keywords**:\
 `Secure HTTPS for Pi-hole`, `Pi-hole Let's Encrypt setup`, `Pi-hole SSL Docker`, `Secure Pi-hole SSL bare metal`, `acme.sh Pi-hole DNS API`, `Docker Pi-hole HTTPS SSL`, `Pi-hole SSL Automation Script`
+=======
+- Follow the prompts: Enter your domain, email, select DNS provider, supply API keys securely.
+>>>>>>> parent of 6979e5d (Refactored for even more security and structure)
