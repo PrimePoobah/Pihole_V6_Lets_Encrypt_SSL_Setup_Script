@@ -2,8 +2,13 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 Easily and securely configure **HTTPS/SSL certificates** for your **Pi-hole** instance using [acme.sh](https://github.com/acmesh-official/acme.sh) with DNS API validation.\
 This script is designed for **bare-metal** and **Docker-based** Pi-hole installations, fully hardened for production, and audit-ready.
+=======
+This script securely configures **HTTPS and SSL certificates** for your **Pi-hole** installation using the **acme.sh** ACME client and **DNS API validation**.  
+Supports both **bare-metal** and **Docker** Pi-hole setups with auto-renewal, hardened security, and major DNS providers.
+>>>>>>> parent of 6979e5d (Refactored for even more security and structure)
 =======
 This script securely configures **HTTPS and SSL certificates** for your **Pi-hole** installation using the **acme.sh** ACME client and **DNS API validation**.  
 Supports both **bare-metal** and **Docker** Pi-hole setups with auto-renewal, hardened security, and major DNS providers.
@@ -63,6 +68,7 @@ Supports both **bare-metal** and **Docker** Pi-hole setups with auto-renewal, ha
    ./pihole-https-setup.sh
    ```
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 ---
@@ -159,6 +165,9 @@ This script is distributed under the [MIT License](LICENSE).
 
 **Keywords**:\
 `Secure HTTPS for Pi-hole`, `Pi-hole Let's Encrypt setup`, `Pi-hole SSL Docker`, `Secure Pi-hole SSL bare metal`, `acme.sh Pi-hole DNS API`, `Docker Pi-hole HTTPS SSL`, `Pi-hole SSL Automation Script`
+=======
+- Follow the prompts: Enter your domain, email, select DNS provider, supply API keys securely.
+>>>>>>> parent of 6979e5d (Refactored for even more security and structure)
 =======
 - Follow the prompts: Enter your domain, email, select DNS provider, supply API keys securely.
 >>>>>>> parent of 6979e5d (Refactored for even more security and structure)
