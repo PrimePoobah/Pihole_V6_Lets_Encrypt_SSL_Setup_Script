@@ -69,7 +69,7 @@ The script supports DNS validation through the following providers:
 1. Download the script:
 
 ```bash
-curl -O https://raw.githubusercontent.com/yourusername/piholev6-ssl-setup/main/piholev6-ssl-setup.sh
+curl -O https://raw.githubusercontent.com/PrimePoobah/piholev6-ssl-setup/main/piholev6-ssl-setup.sh
 ```
 
 2. Make it executable:
