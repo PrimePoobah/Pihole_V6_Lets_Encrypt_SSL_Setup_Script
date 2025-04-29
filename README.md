@@ -1,4 +1,4 @@
-# Pi-hole V6 HTTPS Certificate Setup 
+# Pi-hole v6.x HTTPS Certificate Setup 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Docker Support](https://img.shields.io/badge/Docker-Support-blue)](https://www.docker.com/)
