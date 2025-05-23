@@ -4,7 +4,7 @@
 ![Docker](https://img.shields.io/badge/Docker-Supported-blue?style=flat-square)
 ![Let's Encrypt](https://img.shields.io/badge/Let's%20Encrypt-Yes-green?style=flat-square)
 ![HTTPS Enabled](https://img.shields.io/badge/HTTPS-Enabled-brightgreen?style=flat-square)
-![Auto Renewal](https://img.shields.io/badge/Auto-Renewal-Enabled-success?style=flat-square)
+[![Auto Renewal](https://img.shields.io/badge/Auto--Renewal-Enabled-brightgreen)](https://github.com/acmesh-official/acme.sh)
 
 ---
 
