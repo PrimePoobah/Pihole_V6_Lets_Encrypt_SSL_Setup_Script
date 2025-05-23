@@ -1,191 +1,209 @@
-# Pi-hole v6.x HTTPS Certificate Setup 
+# 🕶️ Pi-hole v6.x HTTPS Certificate Setup — Now with 69% More Sass
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Docker Support](https://img.shields.io/badge/Docker-Support-blue)](https://www.docker.com/)
-[![Pi-hole Compatible](https://img.shields.io/badge/Pi--hole-Compatible-green)](https://pi-hole.net/)
-[![Let's Encrypt Compatible](https://img.shields.io/badge/Let%27s%20Encrypt-Compatible-brightgreen)](https://letsencrypt.org/)
-[![acme.sh powered](https://img.shields.io/badge/acme.sh-powered-blue)](https://github.com/acmesh-official/acme.sh)
-[![HTTPS Enabled](https://img.shields.io/badge/HTTPS-Enabled-brightgreen)]()
-[![DNS Providers](https://img.shields.io/badge/DNS%20Providers-8-orange)]()
-[![Auto Renewal](https://img.shields.io/badge/Auto%20Renewal-Enabled-success)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+![Docker](https://img.shields.io/badge/Docker-Supported-blue?style=flat-square)
+![Let's Encrypt](https://img.shields.io/badge/Let's%20Encrypt-Yes-green?style=flat-square)
+![HTTPS Enabled](https://img.shields.io/badge/HTTPS-Enabled-brightgreen?style=flat-square)
+![Auto Renewal](https://img.shields.io/badge/Auto-Renewal-Enabled-success?style=flat-square)
 
-**Secure your Pi-hole admin interface with HTTPS/SSL using this automated setup script. Works with both traditional and Docker Pi-hole installations.**
+---
 
-## 📋 Table of Contents
+## 🔫 Welcome to the Show
 
-- [Overview](#overview)
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Supported DNS Providers](#supported-dns-providers)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Configuration Options](#configuration-options)
-- [Docker Support](#docker-support)
-- [Automatic Certificate Renewal](#automatic-certificate-renewal)
-- [Troubleshooting](#troubleshooting)
-- [Security Considerations](#security-considerations)
-- [Contributing](#contributing)
-- [License](#license)
+So, you’ve got a Pi-hole. Congratulations, you’ve taken your first step toward *not* being followed by a thousand ad trackers. But are you browsing your Pi-hole dashboard over HTTP like a total peasant? Stop it. Seriously.
+
+This script, makes it *stupid easy* to secure your Pi-hole with HTTPS using Let's Encrypt, DNS validation, and the magical powers of `acme.sh`. Works with both regular and Docker Pi-hole setups because inclusivity matters.
+
+---
+> TL;DR: Run a script. Get SSL. Feel fancy. Maybe cry tears of joy. Or frustration. Depends on your DNS provider.
+---
+
+## 🧠 Table of Awesome
+- [Overview](#-overview)
+- [Features](#-features)
+- [Stuff You Gotta Have](#-prerequisites)
+- [DNS Avenger Providers](#-supported-dns-providers)
+- [Install Me Baby](#-installation)
+- [Use It or Lose It](#-usage)
+- [Fancy Configs](#️-configuration-options)
+- [Dockerheads Unite](#-docker-support)
+- [Auto-Magic Renewals](#-automatic-certificate-renewal)
+- [Things That Go Boom](#-troubleshooting)
+- [Security-ish](#-security-considerations)
+- [Contribute or Else](#-contributing)
+- [License Stuff](#-license)
+- [Credits & Thanks-for-All-the-Fish](#-credits)
+
+---
 
 ## 🔍 Overview
 
-This script automates the process of securing your Pi-hole admin interface with HTTPS using Let's Encrypt certificates and DNS validation. It supports both traditional Pi-hole installations and Docker deployments, making it versatile for various setup configurations.
+You want HTTPS. I want tacos. Let’s meet in the middle.
 
-The script leverages [acme.sh](https://github.com/acmesh-official/acme.sh) for certificate management and integrates with multiple DNS providers for validation, allowing you to obtain valid SSL certificates even when your Pi-hole is not publicly accessible.
+This script automagically sets up HTTPS on your Pi-hole admin interface using Let’s Encrypt and DNS validation — even if your Pi-hole is chilling behind a NAT like it’s hiding from John Wick.
 
-## ✨ Features
+It works on bare metal, in Docker, and possibly in the Quantum Realm (not tested).
 
-- **Automated HTTPS Setup**: One-command solution to secure your Pi-hole admin interface
-- **Multiple DNS Provider Support**: Works with 8 major DNS providers for validation
-- **Docker Support**: Detects and configures certificates for Docker Pi-hole installations
-- **Automatic Renewal**: Sets up scheduled certificate renewal via cron
-- **ECC Certificates**: Uses efficient and secure ECC certificates
-- **User-Friendly**: Interactive prompts guide you through the setup process
+---
+
+## ✨ Features (Cue Drumroll)
+- 💥 One-command HTTPS setup
+- 🧙 DNS validation with *eight* mystical DNS providers
+- 🐳 Docker support, because containerization is sexy
+- 🔄 Auto-renewal, because remembering things is for chumps
+- 🔐 ECC certs because... math
+- 🧑‍🎤 Interactive setup wizard that holds your hand like a scared raccoon
+
+---
 
 ## 📋 Prerequisites
+Before we ride this unicorn, you’ll need:
+- A working Pi-hole (duh)
+- A domain or subdomain aimed squarely at your Pi-hole
+- DNS provider API creds (no stealing!)
+- A bash shell and `curl` installed
+- Enough permission mojo to mess with your Pi-hole config
 
-- A running Pi-hole installation (bare metal or Docker)
-- Domain or subdomain pointed to your Pi-hole's IP address
-- API credentials for your DNS provider
-- `bash` shell environment
-- `curl` installed on your system
-- Appropriate permissions to modify Pi-hole configuration
+---
 
 ## 🔒 Supported DNS Providers
+We got ‘em all. Well, at least the cool ones:
 
-The script supports DNS validation through the following providers:
+- Cloudflare (bring your API token, not your drama)
+- Namecheap (username, API key, source IP… and a love letter)
+- GoDaddy (key + secret = 🔓)
+- AWS Route53 (keys or credential files, you choose your poison)
+- DigitalOcean (token, please)
+- Linode (yep, also token)
+- Google Cloud DNS (service account JSON file — it’s a party)
+- deSEC (token, once again)
 
-1. **Cloudflare** - Requires API token
-2. **Namecheap** - Requires username, API key, and source IP
-3. **GoDaddy** - Requires API key and secret
-4. **AWS Route53** - Supports both API keys and credential files
-5. **DigitalOcean** - Requires API token
-6. **Linode** - Requires API token
-7. **Google Cloud DNS** - Requires service account key file
-8. **deSEC** - Requires API token
+---
 
-## 💻 Installation
-
-1. Download the script:
-
+## 💻 Installation (aka CTRL+C this stuff)
 ```bash
 curl -O https://raw.githubusercontent.com/PrimePoobah/piholev6-ssl-setup/main/piholev6-ssl-setup.sh
-```
-
-2. Make it executable:
-
-```bash
 chmod +x piholev6-ssl-setup.sh
-```
-
-3. Run the script:
-
-```bash
 ./piholev6-ssl-setup.sh
 ```
 
-## 🚀 Usage
+---
 
-When you run the script, it will guide you through the setup process with interactive prompts:
+## 🚀 Usage (Do the Thing)
+When you run this magnificent beast:
+1. It detects Docker (because it’s psychic)
+2. Asks for your domain (e.g., `pihole.yourcooldomain.com`)
+3. Gets your email (for Let's Encrypt. No spam. Probably.)
+4. Asks which DNS god you worship
+5. Collects your API soul… I mean credentials
+6. Installs `acme.sh` if it’s slacking
+7. Gets your certificate 🎉
+8. Configures Pi-hole to use it
+9. Sets up auto-renewal so you can forget this ever happened
 
-1. Detect if you're using Docker for Pi-hole
-2. Ask for your domain/subdomain (e.g., `pihole.yourdomain.com`)
-3. Request your email address (for Let's Encrypt registration)
-4. Ask you to select your DNS provider
-5. Collect the necessary API credentials for your chosen provider
-6. Install acme.sh if not already present
-7. Obtain the SSL certificate via DNS validation
-8. Configure Pi-hole to use the new certificate
-9. Setup automatic renewal
+---
 
 ## ⚙️ Configuration Options
+No YAML, no BS. It’ll ask you things like:
+- Your domain
+- Your email
+- Your DNS provider
+- Your API credentials
 
-The script collects all necessary information interactively, including:
+You answer. It obeys. Like a good intern.
 
-- **Domain**: The domain or subdomain for your Pi-hole admin interface
-- **Email**: Your email for ACME registration and renewal notifications
-- **DNS Provider**: Your DNS hosting provider for validation
-- **API Credentials**: Authentication details for your DNS provider
+---
 
 ## 🐳 Docker Support
+Using Docker? You Rockstar. No problem.
 
-For Docker installations, the script will:
+- It asks for your container name (`pihole` by default, don’t be a maverick)
+- Copies certs into the container
+- Tells Pi-hole to behave with HTTPS
+- Hooks into renewals like a cybernetic octopus
 
-1. Ask for your Pi-hole container name (defaults to "pihole")
-2. Copy the certificate to the appropriate location in the container
-3. Configure the container to use HTTPS
-4. Set up renewal hooks that work with your Docker container
-
-Example Docker-specific commands:
-
+Example nerd-fu:
 ```bash
 docker cp /path/to/tls.pem pihole:/etc/pihole/tls.pem
 docker exec pihole pihole-FTL --config webserver.domain your-domain.com
 docker exec pihole service pihole-FTL restart
 ```
 
+---
+
 ## 🔄 Automatic Certificate Renewal
+Because who wants to do anything manually?
 
-The script configures acme.sh to automatically renew your certificate before expiration. It adds a cron job that will:
+This script:
+- Sets a cron job to check every 60 days-ish
+- Renews when it’s close to expiry
+- Installs the new cert
+- Restarts `pihole-FTL` like a champ
 
-1. Check certificate status approximately every 60 days
-2. Renew if the certificate is nearing expiration
-3. Automatically install the renewed certificate
-4. Restart the Pi-hole FTL service to apply changes
-
-You can manually force a renewal with:
-
+Manual override?
 ```bash
 ~/.acme.sh/acme.sh --renew -d your-domain.com --force
 ```
 
-## ❓ Troubleshooting
+---
 
-**Certificate Issuance Fails**:
-- Verify your DNS provider API credentials
-- Ensure your domain's DNS is properly configured
-- Check if your DNS provider has API rate limits
+## ❓ Troubleshooting (aka Crap Hit the Fan)
+**Can’t get a cert?**
+- Check your DNS API creds
+- Verify your DNS settings
+- Sacrifice a virtual goat? (not required, but might help)
 
-**HTTPS Not Working After Setup**:
-- Verify the certificate was properly installed: `ls -l /etc/pihole/tls.pem`
-- Check Pi-hole FTL logs: `sudo systemctl status pihole-FTL`
-- Ensure your domain resolves to the correct IP address
+**HTTPS not working?**
+- Check your files: `ls -l /etc/pihole/tls.pem`
+- Read the logs: `sudo systemctl status pihole-FTL`
+- Verify DNS is pointed correctly
 
-**Docker-Specific Issues**:
-- Make sure the container name was entered correctly
-- Verify the certificate path inside the container
-- Check Docker logs: `docker logs pihole`
+**Docker crying?**
+- Check your container name
+- Verify paths
+- Read those juicy `docker logs pihole`
+
+---
 
 ## 🔐 Security Considerations
+Because I care about your bits:
+- API creds are stored *temporarily*
+- Docker copies are done internally
+- Only give API tokens the bare minimum rights
+- Use restricted service accounts if you’re an AWS/Google ninja
 
-- The script stores API credentials temporarily in environment variables
-- In Docker environments, certificates are copied through Docker commands
-- API tokens should have the minimum required permissions
-- For AWS and Google Cloud, use restricted service accounts
+---
 
-## 🤝 Contributing
+## 🤝 Contributing (Let’s Be Besties)
+Wanna help? Sweet.
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+1. Fork the repo
+2. `git checkout -b feature/deadpool-does-ssl`
+3. Make your changes. Go wild.
+4. `git commit -m "Made it 1000% cooler"`
+5. `git push origin feature/deadpool-does-ssl`
+6. Open a PR. I'll bring the tacos.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+---
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT. Do whatever. But if it breaks, you get to keep both halves.
+
+---
 
 ## 🙏 Credits
 
 This project wouldn't be possible without the following open-source projects and contributors:
 
-- **[Pi-hole](https://pi-hole.net/)**: Network-wide ad blocking solution that makes your network faster and more secure. Pi-hole is a registered trademark of Pi-hole LLC.
-- **[acme.sh](https://github.com/acmesh-official/acme.sh)**: A pure Unix shell script implementing ACME client protocol, providing the backbone of our certificate management.
-- **[Let's Encrypt](https://letsencrypt.org/)**: Free, automated, and open certificate authority providing the SSL certificates used in this project.
-- **[mplabs](https://github.com/mplabs)**: Special thanks for contributing the deSEC DNS provider support, expanding the script's functionality.
+- **[Pi-hole](https://pi-hole.net/)**: Because ads suck.
+- **[acme.sh](https://github.com/acmesh-official/acme.sh)**: Shell-fu for SSL magic.
+- **[Let's Encrypt](https://letsencrypt.org/)**: Saving the internet one free cert at a time.
+- **[mplabs](https://github.com/mplabs)**: For adding deSEC support and increasing the awesome.
 
 ---
 
-**Note**: This script is not officially affiliated with Pi-hole. Pi-hole is a registered trademark of Pi-hole LLC.
+> _“This is not officially affiliated with Pi-hole, but it’s got a whole lotta love for it.”_
+> 
+---
+🧨 Now go secure your Pi-hole like a cyber-ninja.
