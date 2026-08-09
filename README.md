@@ -63,7 +63,7 @@ Before we ride this unicorn, you’ll need:
 - A domain or subdomain aimed squarely at your Pi-hole
 - DNS provider API creds (no stealing!)
 - A bash shell and `curl` installed
-- Enough permission mojo to mess with your Pi-hole config
+- Root, if Pi-hole runs bare-metal (the script writes `/etc/pihole/tls.pem` and restarts `pihole-FTL` directly). For Docker, just run the script as whichever user manages your Pi-hole container — don't `sudo` into a rootless Docker setup, or the renewal cron won't be able to reach it later.
 
 ---
 
@@ -83,7 +83,7 @@ We got ‘em all. Well, at least the cool ones:
 
 ## 💻 Installation (aka CTRL+C this stuff)
 ```bash
-curl -O https://raw.githubusercontent.com/PrimePoobah/Pihole_V6_Lets_Encrypt_SSL_Setup_Script/refs/piholev6-ssl-setup.sh
+curl -O https://raw.githubusercontent.com/PrimePoobah/Pihole_V6_Lets_Encrypt_SSL_Setup_Script/main/piholev6-ssl-setup.sh
 chmod +x piholev6-ssl-setup.sh
 ./piholev6-ssl-setup.sh
 ```
@@ -92,12 +92,12 @@ chmod +x piholev6-ssl-setup.sh
 
 ## 🚀 Usage (Do the Thing)
 When you run this magnificent beast:
-1. It detects Docker (because it’s psychic)
-2. Asks for your domain (e.g., `pihole.yourcooldomain.com`)
-3. Gets your email (for Let's Encrypt. No spam. Probably.)
-4. Lets you decide whether it should force the Pi-hole web UI back to ports 80/443
-5. Asks which DNS god you worship
-6. Collects your API soul… I mean credentials
+1. Asks for your domain (e.g., `pihole.yourcooldomain.com`)
+2. Gets your email (for Let's Encrypt. No spam. Probably.)
+3. Lets you decide whether it should force the Pi-hole web UI back to ports 80/443
+4. Asks which DNS god you worship
+5. Collects your API soul… I mean credentials
+6. Asks whether Pi-hole runs bare-metal or in Docker (no crystal ball involved)
 7. Installs `acme.sh` if it’s slacking
 8. Gets your certificate 🎉
 9. Configures Pi-hole to use it

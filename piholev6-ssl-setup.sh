@@ -139,7 +139,8 @@ case "$DNS_PROVIDER" in
   8)
     # deSEC
     read -r -p "Enter your deSEC API token: " DESEC_API_TOKEN
-    export DESEC_TOKEN="${DESEC_API_TOKEN}"
+    # acme.sh's dns_desec plugin reads DEDYN_TOKEN, not DESEC_TOKEN.
+    export DEDYN_TOKEN="${DESEC_API_TOKEN}"
     DNS_METHOD="dns_desec"
     ;;
   *)
@@ -148,61 +149,11 @@ case "$DNS_PROVIDER" in
     ;;
 esac
 
-# ---------- Paths & acme.sh install ----------
-if [ "$(id -u)" = "0" ]; then
-  ACME_HOME="/root/.acme.sh"
-else
-  ACME_HOME="${HOME}/.acme.sh"
-fi
-ACME_BIN="${ACME_HOME}/acme.sh"
-
-if [ ! -f "${ACME_BIN}" ]; then
-  echo "acme.sh not found. Installing to ${ACME_HOME}..."
-  for c in cron socat; do
-    if ! in_path "$c"; then
-      echo "Warning: '$c' not found. Install it first: sudo apt install -y $c"
-    fi
-  done
-  curl https://get.acme.sh | sh -s email="${ACME_EMAIL}"
-else
-  echo "acme.sh is already installed at ${ACME_BIN}."
-fi
-
-echo "=== acme.sh version ==="
-"${ACME_BIN}" --version
-
-# ---------- Determine issuance vs forced renewal ----------
-CERT_PATH="${ACME_HOME}/${DOMAIN}_ecc"
-KEY_FILE="${CERT_PATH}/${DOMAIN}.key"
-FULLCHAIN_FILE="${CERT_PATH}/fullchain.cer"
-COMBINED_CERT="/tmp/tls.pem"
-
-echo "=== Preparing certificate for '${DOMAIN}' via ${DNS_METHOD} ==="
-"${ACME_BIN}" --set-default-ca --server letsencrypt
-
-if [ -d "${CERT_PATH}" ]; then
-  echo "Existing certificate directory detected at ${CERT_PATH}."
-  echo "Forcing renewal and reinstall..."
-  "${ACME_BIN}" --renew -d "${DOMAIN}" --force || true
-else
-  echo "No existing certificate found. Issuing a new certificate..."
-  "${ACME_BIN}" --issue \
-    --dns "${DNS_METHOD}" \
-    -d "${DOMAIN}" \
-    --server letsencrypt \
-    --keylength ec-256
-fi
-
-# Validate files after (re)issuance
-if [ ! -f "${KEY_FILE}" ] || [ ! -f "${FULLCHAIN_FILE}" ]; then
-  echo "Error: expected cert files not found. KEY: ${KEY_FILE}, FULLCHAIN: ${FULLCHAIN_FILE}"
-  exit 1
-fi
-
-# Build PEM as CERT first, then KEY (embedded server accepts PEM with both)
-cat "${FULLCHAIN_FILE}" "${KEY_FILE}" > "${COMBINED_CERT}"
-
 # ---------- Pi-hole deployment mode ----------
+# Decided before the root check below: bare-metal and Docker need different
+# privileges, and for Docker specifically, whoever runs this script also
+# decides whose crontab (and whose Docker socket, for rootless setups) the
+# renewal hook will use later.
 echo ""
 echo "Where is your Pi-hole running?"
 echo "1) Bare-metal / VM (pihole-FTL on the host)"
@@ -222,6 +173,97 @@ if [ "${PH_MODE}" = "2" ]; then
   read -r -p "Path inside container for PEM (default: /etc/pihole/tls.pem): " _tp
   TARGET_CERT_PATH_DOCKER="${_tp:-/etc/pihole/tls.pem}"
 fi
+
+# ---------- Paths & acme.sh install ----------
+if [ "${IN_DOCKER}" = true ]; then
+  # Docker mode never touches /etc/pihole or pihole-FTL on the host -- the
+  # reload hook only runs docker cp/exec/restart against the container, so
+  # it needs access to the right Docker socket, not root. For ROOTLESS
+  # Docker that socket belongs to a normal user; requiring root here would
+  # make the renewal hook (and this initial run) unable to reach it. acme.sh
+  # installs its cron for whoever invokes this script, so running as the
+  # same user who owns the rootless Docker daemon keeps the later
+  # cron-triggered renewal in the same context as this interactive run.
+  if [ "$(id -u)" = "0" ]; then
+    echo "Warning: running as root with Docker mode selected."
+    echo "If Pi-hole's container is managed by ROOTLESS Docker under a normal"
+    echo "user, run this script as that user instead (no sudo) -- otherwise"
+    echo "the renewal cron/reload hook may not reach the socket that"
+    echo "actually owns the Pi-hole container."
+  fi
+  ACME_HOME="$( [ "$(id -u)" = "0" ] && echo "/root/.acme.sh" || echo "${HOME}/.acme.sh" )"
+else
+  # Bare-metal mode writes /etc/pihole/tls.pem and restarts pihole-FTL, so it
+  # needs root. acme.sh installs its renewal cron for whoever runs this
+  # script: run as a normal user and that cron fires without a TTY, every
+  # sudo in the hook fails, and the cert silently stops being deployed.
+  if [ "$(id -u)" != "0" ]; then
+    echo "Error: run this script as root for bare-metal Pi-hole (e.g. 'sudo -H ./piholev6-ssl-setup.sh')."
+    echo "acme.sh installs its auto-renewal cron for the invoking user, and the"
+    echo "renewal hook needs root to write /etc/pihole/tls.pem and restart pihole-FTL."
+    echo "Running as '$(id -un)' would install a cron that cannot deploy renewals."
+    exit 1
+  fi
+  ACME_HOME="/root/.acme.sh"
+fi
+ACME_BIN="${ACME_HOME}/acme.sh"
+
+if [ ! -f "${ACME_BIN}" ]; then
+  echo "acme.sh not found. Installing to ${ACME_HOME}..."
+  for c in cron socat; do
+    if ! in_path "$c"; then
+      echo "Warning: '$c' not found. Install it first: apt install -y $c"
+    fi
+  done
+  # --home is explicit: the installer otherwise derives its target from $HOME,
+  # which sudo may leave pointing at the invoking user's home.
+  curl https://get.acme.sh | sh -s -- --home "${ACME_HOME}" --accountemail "${ACME_EMAIL}"
+else
+  echo "acme.sh is already installed at ${ACME_BIN}."
+fi
+
+echo "=== acme.sh version ==="
+"${ACME_BIN}" --version
+
+# ---------- Determine issuance vs forced renewal ----------
+CERT_PATH="${ACME_HOME}/${DOMAIN}_ecc"
+KEY_FILE="${CERT_PATH}/${DOMAIN}.key"
+FULLCHAIN_FILE="${CERT_PATH}/fullchain.cer"
+COMBINED_CERT="/tmp/tls.pem"
+
+echo "=== Preparing certificate for '${DOMAIN}' via ${DNS_METHOD} ==="
+"${ACME_BIN}" --set-default-ca --server letsencrypt
+
+# Test for the cert itself, not the directory: a failed issuance leaves
+# ${CERT_PATH} behind holding only a domain key, and renewing that is an error.
+if [ -f "${FULLCHAIN_FILE}" ]; then
+  echo "Existing certificate detected at ${FULLCHAIN_FILE}."
+  echo "Forcing renewal and reinstall..."
+  if ! "${ACME_BIN}" --renew -d "${DOMAIN}" --force --dnssleep 30; then
+    echo "Error: certificate renewal failed for ${DOMAIN}. Aborting install so an old certificate is not re-deployed."
+    exit 1
+  fi
+else
+  echo "No existing certificate found. Issuing a new certificate..."
+  if ! "${ACME_BIN}" --issue \
+    --dns "${DNS_METHOD}" \
+    -d "${DOMAIN}" \
+    --server letsencrypt \
+    --keylength ec-256 \
+    --dnssleep 30; then
+    echo "Error: certificate issuance failed for ${DOMAIN}. Aborting install."
+    exit 1
+  fi
+fi
+
+# Validate files after (re)issuance
+if [ ! -f "${KEY_FILE}" ] || [ ! -f "${FULLCHAIN_FILE}" ]; then
+  echo "Error: expected cert files not found. KEY: ${KEY_FILE}, FULLCHAIN: ${FULLCHAIN_FILE}"
+  exit 1
+fi
+
+# Build PEM as CERT first, then KEY (embedded server accepts PEM with both)
+cat "${FULLCHAIN_FILE}" "${KEY_FILE}" > "${COMBINED_CERT}"
 
 # ---------- Functions for configuring FTL webserver ----------
 set_ftl_config() {
@@ -295,13 +337,18 @@ else
   fi
 
   # Renewal hook for bare-metal (force reinstall on renew)
+  # ponytail: chown is the only tolerated failure; it is braced so `|| true`
+  # cannot swallow a failed write. Without the braces the chain parses as
+  # ((write && chmod && chown) || true) && ... -- a failed write still exits 0,
+  # so acme.sh logs "Reload successful" while FTL keeps serving the old cert.
   "${ACME_BIN}" --install-cert -d "${DOMAIN}" --force \
     --reloadcmd "cat '${FULLCHAIN_FILE}' '${KEY_FILE}' | sudo tee '/etc/pihole/tls.pem' >/dev/null && \
     sudo chmod 600 '/etc/pihole/tls.pem' && \
-    sudo chown pihole:pihole '/etc/pihole/tls.pem' || true && \
+    { sudo chown pihole:pihole '/etc/pihole/tls.pem' || true; } && \
     sudo pihole-FTL --config webserver.tls.cert '/etc/pihole/tls.pem' && \
     sudo pihole-FTL --config webserver.domain '${DOMAIN}'${HOST_RELOAD_PORT_SNIPPET} && \
-    (sudo systemctl restart pihole-FTL 2>/dev/null || sudo service pihole-FTL restart)"
+    (sudo systemctl restart pihole-FTL 2>/dev/null || sudo service pihole-FTL restart) && \
+    cat '${FULLCHAIN_FILE}' '${KEY_FILE}' | sudo cmp -s - /etc/pihole/tls.pem"
 fi
 
 # Clean up temporary combined cert
